@@ -34,3 +34,5 @@ shim:
     - /trellis/forward
     - /trellis/train-step
     - /trellis/benchmark
+    - /trellis/yoda/train-step
+    - /trellis/yoda/benchmark
