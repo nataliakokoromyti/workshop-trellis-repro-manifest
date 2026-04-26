@@ -1,0 +1,33 @@
+cvm-version: 0.7.1
+cpus: 16
+memory: 65536
+gpus: 8
+
+containers:
+  - name: api
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:v0.1.1@sha256:b8099defc866216e8ef13bfaa5c331be665a00b5504c06c1ff650554f0ce4be3
+    runtime: nvidia
+    gpus: all
+    ipc: host
+    env:
+      - PORT: "8080"
+      - CONFIG_PATH: "/app/configs/smoke_small_moe.yaml"
+    command:
+      - uvicorn
+      - app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+
+shim:
+  upstream-port: 8080
+  paths:
+    - /health
+    - /gpus
+    - /smoke/env
+    - /smoke/dist
+    - /smoke/forward
+    - /smoke/train-step
+    - /benchmark/step
+
