@@ -5,7 +5,7 @@ gpus: 8
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:v0.1.1@sha256:b8099defc866216e8ef13bfaa5c331be665a00b5504c06c1ff650554f0ce4be3
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.1.1@sha256:b8099defc866216e8ef13bfaa5c331be665a00b5504c06c1ff650554f0ce4be3
     runtime: nvidia
     gpus: all
     ipc: host
@@ -30,4 +30,3 @@ shim:
     - /smoke/forward
     - /smoke/train-step
     - /benchmark/step
-
