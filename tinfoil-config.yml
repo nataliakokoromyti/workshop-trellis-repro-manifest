@@ -36,3 +36,4 @@ shim:
     - /trellis/benchmark
     - /trellis/yoda/train-step
     - /trellis/yoda/benchmark
+    - /jobs/*
