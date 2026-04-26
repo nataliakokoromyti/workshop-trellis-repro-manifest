@@ -5,34 +5,17 @@ gpus: 8
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.3.13@sha256:be15289ac9ceec975de4b799cb5246c06e04781ef19dda2acffc5adac3f4d995
+    image: python:3.11-slim
     runtime: nvidia
     gpus: all
     ipc: host
-    env:
-      - PORT: "8080"
-      - CONFIG_PATH: "/app/configs/trellis_kimi_k2.yaml"
     command:
-      - uvicorn
-      - app:app
-      - --host
-      - 0.0.0.0
-      - --port
+      - python
+      - -m
+      - http.server
       - "8080"
 
 shim:
   upstream-port: 8080
   paths:
-    - /health
-    - /gpus
-    - /smoke/env
-    - /smoke/dist
-    - /smoke/forward
-    - /smoke/train-step
-    - /benchmark/step
-    - /trellis/env
-    - /trellis/forward
-    - /trellis/train-step
-    - /trellis/benchmark
-    - /trellis/yoda/train-step
-    - /trellis/yoda/benchmark
+    - /
