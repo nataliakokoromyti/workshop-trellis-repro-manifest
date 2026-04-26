@@ -5,7 +5,7 @@ gpus: 8
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.2.8@sha256:70e2572df768c34403f75384acff0b7bb43436a77f76c791da17f12bc30687d3
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.2.9@sha256:122d7a520b4d22bc5aa96e4449dbfe5d2f21c77a28fed4649b57bb3541c54c74
     runtime: nvidia
     gpus: all
     ipc: host
