@@ -1,0 +1,22 @@
+name: Tinfoil Build
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out manifest
+        uses: actions/checkout@v4
+
+      - name: Confirm manifest only
+        run: |
+          echo "Public Tinfoil manifest repo"
+          test -f tinfoil-config.yml
+
