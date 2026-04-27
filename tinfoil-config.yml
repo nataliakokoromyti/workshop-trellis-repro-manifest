@@ -5,13 +5,14 @@ gpus: 8
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.3.18@sha256:7e6572ab083c4d054d96439e2f48672907d527ccbfca19733807f01b4168dd67
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.3.19@sha256:4bff8923f1281990186716439e2778d5600f9e3802e8817ca2ed9a460164fb0d
     runtime: nvidia
     gpus: all
     ipc: host
     env:
       - PORT: "8080"
       - CONFIG_PATH: "/app/configs/trellis_kimi_k2.yaml"
+      - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     command:
       - uvicorn
       - app:app
