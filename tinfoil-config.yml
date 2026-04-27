@@ -5,7 +5,7 @@ gpus: 8
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.3.44
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:0.3.53
     runtime: nvidia
     gpus: all
     ipc: host
@@ -49,4 +49,5 @@ shim:
     - /trellis/yoda/baseline/train-step
     - /trellis/yoda/baseline/benchmark
     - /trellis/yoda/baseline/profile
+    - /parity/kimi-k2
     - /jobs/*
