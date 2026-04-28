@@ -13,10 +13,10 @@ containers:
       - PORT: "8080"
       - CONFIG_PATH: "/app/configs/trellis_kimi_k2.yaml"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
-      - TRELLIS_EXPERT_GROUP_CHUNK_SIZE: "4096"
-      - TRELLIS_EXPERT_TOKEN_CHUNK_SIZE: "4096"
-      - TRELLIS_LINEAR_CHUNK_SIZE: "4096"
-      - TRELLIS_ROUTING_CHUNK_SIZE: "16384"
+      - TRELLIS_EXPERT_GROUP_CHUNK_SIZE: "512"
+      - TRELLIS_EXPERT_TOKEN_CHUNK_SIZE: "512"
+      - TRELLIS_LINEAR_CHUNK_SIZE: "512"
+      - TRELLIS_ROUTING_CHUNK_SIZE: "512"
     command:
       - uvicorn
       - app:app
