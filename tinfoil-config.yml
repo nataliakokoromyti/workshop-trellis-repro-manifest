@@ -14,7 +14,7 @@ containers:
       - CONFIG_PATH: "/app/configs/trellis_kimi_k2.yaml"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
       - TRELLIS_EXPERT_GROUP_CHUNK_SIZE: "512"
-      - TRELLIS_EXPERT_DEQUANT_CHUNK_SIZE: "2"
+      - TRELLIS_EXPERT_DEQUANT_CHUNK_SIZE: "1"
       - TRELLIS_EXPERT_TOKEN_CHUNK_SIZE: "512"
       - TRELLIS_LINEAR_CHUNK_SIZE: "512"
       - TRELLIS_ROUTING_CHUNK_SIZE: "512"
