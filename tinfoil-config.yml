@@ -25,10 +25,8 @@ containers:
       - -lc
       - |
         set -euo pipefail
-        if [ ! -f /workspace/app.py ]; then
-          mkdir -p /workspace
-          cp -a /app/. /workspace/
-        fi
+        mkdir -p /workspace
+        cp -a /app/. /workspace/
         cd /workspace
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
@@ -46,6 +44,7 @@ shim:
     - /trellis/forward
     - /trellis/train-step
     - /trellis/benchmark
+    - /trellis/benchmark-tiny
     - /trellis/baseline/forward
     - /trellis/baseline/train-step
     - /trellis/baseline/benchmark
