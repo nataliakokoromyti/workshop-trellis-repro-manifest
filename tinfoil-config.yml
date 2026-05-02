@@ -1,7 +1,13 @@
-cvm-version: 0.7.5
-cpus: 16
-memory: 65536
+shim-version: v0.4.1@sha256:3187744b40047060b9567d4b964a394ea0f21b29f99dd371b3e1c91ecee3c196
+cvm-version: 0.6.9
+cpus: 32
+memory: 524288
 gpus: 8
+
+models:
+  - name: "kimi-k2-thinking"
+    repo: "moonshotai/Kimi-K2-Thinking@612681931a8c906ddb349f8ad0f582cb552189cd"
+    mpk: "83a9b1859995ac80eba3e4d928ea04d1aaa6f855ed80f32eb75098526c272f2d_594256601088_69ba6dc2-989f-56d7-8ea2-db7d537f3725"
 
 containers:
   - name: api
@@ -29,8 +35,9 @@ containers:
       - -lc
       - |
         set -euo pipefail
-        mkdir -p /workspace
+        mkdir -p /workspace /models
         cp -a /app/. /workspace/
+        ln -sfn /tinfoil/mpk/mpk-83a9b1859995ac80eba3e4d928ea04d1aaa6f855ed80f32eb75098526c272f2d /models/kimi-k2-thinking
         cd /workspace
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
