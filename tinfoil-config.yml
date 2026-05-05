@@ -43,8 +43,8 @@ containers:
           git clone https://github.com/nataliakokoromyti/workshop-trellis-repro-public.git /workspace
         fi
         cd /workspace
-        git fetch --depth 1 origin 18229a3196c99e6c7ad940b73dc47eebcf043f50
-        git checkout --force 18229a3196c99e6c7ad940b73dc47eebcf043f50
+        git fetch --depth 1 origin 18229a347548c84f822cc59eb552df794a317b7f
+        git checkout --force 18229a347548c84f822cc59eb552df794a317b7f
         python3 - <<'PY'
         import torch
         import flash_attn
