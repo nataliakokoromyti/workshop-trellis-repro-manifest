@@ -11,7 +11,7 @@ models:
 
 containers:
   - name: api
-    image: ghcr.io/lucid-computing-labs/workshop-trellis-repro:latest
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:latest
     runtime: nvidia
     gpus: all
     ipc: host
