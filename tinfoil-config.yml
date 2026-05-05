@@ -35,6 +35,9 @@ containers:
       - |
         set -euo pipefail
         mkdir -p /workspace /models
+        export MAX_JOBS="${MAX_JOBS:-32}"
+        python3 -m pip install --upgrade --force-reinstall torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+        python3 -m pip install --upgrade --force-reinstall --no-build-isolation flash-attn==2.8.3
         if [ ! -d /workspace/.git ]; then
           find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf {} +
           git clone https://github.com/nataliakokoromyti/workshop-trellis-repro-public.git /workspace
@@ -42,6 +45,13 @@ containers:
         cd /workspace
         git fetch --depth 1 origin b8215c95a2a0dcc480eb700907be68bf6f7e9a54
         git checkout --force b8215c95a2a0dcc480eb700907be68bf6f7e9a54
+        python3 - <<'PY'
+        import torch
+        import flash_attn
+        assert torch.__version__.startswith("2.8.0"), torch.__version__
+        assert hasattr(torch, "_grouped_mm") or hasattr(torch.nn.functional, "grouped_mm")
+        print({"torch": torch.__version__, "flash_attn": flash_attn.__version__}, flush=True)
+        PY
         ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/kimi-k2-thinking
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
