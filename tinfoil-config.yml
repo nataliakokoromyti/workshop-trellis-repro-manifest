@@ -35,9 +35,14 @@ containers:
       - |
         set -euo pipefail
         mkdir -p /workspace /models
-        cp -a /app/. /workspace/
-        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/kimi-k2-thinking
+        if [ ! -d /workspace/.git ]; then
+          find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          git clone https://github.com/nataliakokoromyti/workshop-trellis-repro-public.git /workspace
+        fi
         cd /workspace
+        git fetch --depth 1 origin b8215c95a2a0dcc480eb700907be68bf6f7e9a54
+        git checkout --force b8215c95a2a0dcc480eb700907be68bf6f7e9a54
+        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/kimi-k2-thinking
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
 shim:
