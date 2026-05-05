@@ -6,8 +6,8 @@ gpus: 8
 
 models:
   - name: "kimi-k2-thinking"
-    repo: "moonshotai/Kimi-K2-Thinking@612681931a8c906ddb349f8ad0f582cb552189cd"
-    mpk: "83a9b1859995ac80eba3e4d928ea04d1aaa6f855ed80f32eb75098526c272f2d_594256601088_69ba6dc2-989f-56d7-8ea2-db7d537f3725"
+    repo: "moonshotai/Kimi-K2-Thinking@a51ccc050d73dab088bf7b0e2dd9b30ae85a4e55"
+    mpk: "95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e_594256601088_f19e7117-6b40-53fe-af43-f9a57cb0ec2f"
 
 containers:
   - name: api
@@ -37,7 +37,7 @@ containers:
         set -euo pipefail
         mkdir -p /workspace /models
         cp -a /app/. /workspace/
-        ln -sfn /tinfoil/mpk/mpk-83a9b1859995ac80eba3e4d928ea04d1aaa6f855ed80f32eb75098526c272f2d /models/kimi-k2-thinking
+        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/kimi-k2-thinking
         cd /workspace
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
