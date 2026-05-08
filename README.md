@@ -1,7 +1,9 @@
 # Private FT Manifest
 
-Public Tinfoil deployment manifest for the private `workshop-trellis-repro` image.
+Public Tinfoil deployment manifest.
 
-This repo intentionally contains only deployment metadata.
+This repository intentionally contains only non-secret boot metadata needed for
+measurement and release attestation. Project-specific names, runtime tuning
+knobs, debug settings, and credentials do not belong here.
 
-Release process: see [RELEASE_PROCESS.md](./RELEASE_PROCESS.md) for the tag-only rule.
+Release process: see [RELEASE_PROCESS.md](./RELEASE_PROCESS.md).

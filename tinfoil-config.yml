@@ -4,13 +4,13 @@ memory: 524288
 gpus: 8
 
 models:
-  - name: "kimi-k2-thinking"
+  - name: "primary-model"
     repo: "moonshotai/Kimi-K2-Thinking@a51ccc050d73dab088bf7b0e2dd9b30ae85a4e55"
     mpk: "95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e_594256601088_f19e7117-6b40-53fe-af43-f9a57cb0ec2f"
 
 containers:
   - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:latest
+    image: ghcr.io/nataliakokoromyti/secure-h200-runner:latest
     runtime: nvidia
     gpus: all
     ipc: host
@@ -18,41 +18,14 @@ containers:
       - /mnt/ramdisk/workspace:/workspace
     env:
       - PORT: "8080"
-      - CONFIG_PATH: "/app/configs/trellis_kimi_k2.yaml"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
-      - TRELLIS_EXPERT_GROUP_CHUNK_SIZE: "512"
-      - TRELLIS_EXPERT_DEQUANT_CHUNK_SIZE: "1"
-      - TRELLIS_EXPERT_TOKEN_CHUNK_SIZE: "512"
-      - TRELLIS_LINEAR_CHUNK_SIZE: "512"
-      - TRELLIS_ROUTING_CHUNK_SIZE: "1000000"
-      - TRELLIS_CACHE_STATIC_COUNTS: "1"
-      - TRELLIS_TRACE_MODE: "coarse"
-      - TRELLIS_DEQUANT_TILE_ROWS: "100000000"
-      - TRELLIS_EXPERT_STACK_CHUNK_SIZE: "1"
     command:
       - bash
       - -lc
       - |
         set -euo pipefail
         mkdir -p /workspace /models
-        export MAX_JOBS="${MAX_JOBS:-32}"
-        python3 -m pip install --upgrade --force-reinstall torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
-        python3 -m pip install --upgrade --force-reinstall --no-build-isolation --no-deps flash-attn==2.8.3
-        if [ ! -d /workspace/.git ]; then
-          find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-          git clone https://github.com/nataliakokoromyti/workshop-trellis-repro-public.git /workspace
-        fi
-        cd /workspace
-        git fetch --depth 1 origin 18229a347548c84f822cc59eb552df794a317b7f
-        git checkout --force 18229a347548c84f822cc59eb552df794a317b7f
-        python3 - <<'PY'
-        import torch
-        import flash_attn
-        assert torch.__version__.startswith("2.8.0"), torch.__version__
-        assert hasattr(torch, "_grouped_mm") or hasattr(torch.nn.functional, "grouped_mm")
-        print({"torch": torch.__version__, "flash_attn": flash_attn.__version__}, flush=True)
-        PY
-        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/kimi-k2-thinking
+        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/primary-model
         exec uvicorn app:app --host 0.0.0.0 --port 8080
 
 shim:
@@ -60,25 +33,4 @@ shim:
   paths:
     - /health
     - /gpus
-    - /smoke/env
-    - /smoke/dist
-    - /smoke/forward
-    - /smoke/train-step
-    - /benchmark/step
-    - /trellis/env
-    - /trellis/forward
-    - /trellis/train-step
-    - /trellis/benchmark
-    - /trellis/benchmark-tiny
-    - /trellis/baseline/forward
-    - /trellis/baseline/train-step
-    - /trellis/baseline/benchmark
-    - /trellis/baseline/profile
-    - /trellis/yoda/train-step
-    - /trellis/yoda/benchmark
-    - /trellis/yoda/profile
-    - /trellis/yoda/baseline/train-step
-    - /trellis/yoda/baseline/benchmark
-    - /trellis/yoda/baseline/profile
-    - /parity/kimi-k2
     - /jobs/*
