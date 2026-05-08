@@ -1,4 +1,4 @@
-# Workshop Trellis Tinfoil Manifest
+# Private FT Manifest
 
 Public Tinfoil deployment manifest for the private `workshop-trellis-repro` image.
 
