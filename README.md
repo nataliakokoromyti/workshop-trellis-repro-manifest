@@ -1,3 +1,1 @@
-# Private FT Manifest
-
-Public Tinfoil deployment manifest.
+# Private FT Deployment Manifest
