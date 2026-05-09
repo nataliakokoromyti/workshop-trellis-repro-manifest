@@ -17,19 +17,42 @@ containers:
     volumes:
       - /mnt/ramdisk/workspace:/workspace
     env:
-      - PORT: "8080"
+      - PORT: "8000"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+    entrypoint:
+      - python3
     command:
-      - bash
-      - -lc
+      - -c
       - |
-        set -euo pipefail
-        mkdir -p /workspace /models
-        ln -sfn /tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e /models/primary-model
-        exec uvicorn app:app --host 0.0.0.0 --port 8080
+        import os
+
+        os.makedirs("/workspace", exist_ok=True)
+        os.makedirs("/models", exist_ok=True)
+
+        source = "/tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e"
+        target = "/models/primary-model"
+        try:
+            os.unlink(target)
+        except FileNotFoundError:
+            pass
+        os.symlink(source, target)
+
+        os.execvp(
+            "python3",
+            [
+                "python3",
+                "-m",
+                "uvicorn",
+                "app:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                os.environ.get("PORT", "8000"),
+            ],
+        )
 
 shim:
-  upstream-port: 8080
+  upstream-port: 8000
   paths:
     - /health
     - /gpus
