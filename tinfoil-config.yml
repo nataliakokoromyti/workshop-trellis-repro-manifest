@@ -1,6 +1,6 @@
 cvm-version: 0.7.5
-cpus: 32
-memory: 524288
+cpus: 128
+memory: 1966080
 gpus: 8
 
 models:
