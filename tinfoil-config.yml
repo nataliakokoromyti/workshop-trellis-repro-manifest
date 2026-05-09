@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: ml-training
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro@sha256:e9981e7e09473fc5c7a376171a861862f331b2f14dc98b7ebc88417b6cc67413
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro@sha256:854ca4829f5f3fd60febe2599f61d0e0f0cb30ee2cf58b11ec37ec4fc9baa81d
     runtime: nvidia
     gpus: all
     ipc: host
@@ -20,36 +20,10 @@ containers:
       - PORT: "8000"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     entrypoint:
-      - python3
+      - python
     command:
-      - -c
-      - |
-        import os
-
-        os.makedirs("/workspace", exist_ok=True)
-        os.makedirs("/models", exist_ok=True)
-
-        source = "/tinfoil/mpk/mpk-95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e"
-        target = "/models/primary-model"
-        try:
-            os.unlink(target)
-        except FileNotFoundError:
-            pass
-        os.symlink(source, target)
-
-        os.execvp(
-            "python3",
-            [
-                "python3",
-                "-m",
-                "uvicorn",
-                "app:app",
-                "--host",
-                "0.0.0.0",
-                "--port",
-                os.environ.get("PORT", "8000"),
-            ],
-        )
+      - -m
+      - scripts.training_server
 
 shim:
   upstream-port: 8000
