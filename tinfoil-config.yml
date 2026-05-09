@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: ml-training
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro@sha256:854ca4829f5f3fd60febe2599f61d0e0f0cb30ee2cf58b11ec37ec4fc9baa81d
+    image: ghcr.io/nataliakokoromyti/private-finetuning-repro@sha256:854ca4829f5f3fd60febe2599f61d0e0f0cb30ee2cf58b11ec37ec4fc9baa81d
     runtime: nvidia
     gpus: all
     ipc: host
