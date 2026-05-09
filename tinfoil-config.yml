@@ -9,8 +9,8 @@ models:
     mpk: "95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e_594256601088_f19e7117-6b40-53fe-af43-f9a57cb0ec2f"
 
 containers:
-  - name: api
-    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro:latest@sha256:e9981e7e09473fc5c7a376171a861862f331b2f14dc98b7ebc88417b6cc67413
+  - name: ml-training
+    image: ghcr.io/nataliakokoromyti/workshop-trellis-repro@sha256:e9981e7e09473fc5c7a376171a861862f331b2f14dc98b7ebc88417b6cc67413
     runtime: nvidia
     gpus: all
     ipc: host
