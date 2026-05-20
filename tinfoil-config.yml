@@ -9,8 +9,8 @@ models:
     mpk: "95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e_594256601088_f19e7117-6b40-53fe-af43-f9a57cb0ec2f"
 
 containers:
-  - name: ml-training
-    image: ghcr.io/nataliakokoromyti/private-finetuning-repro@sha256:854ca4829f5f3fd60febe2599f61d0e0f0cb30ee2cf58b11ec37ec4fc9baa81d
+  - name: workshop-yoda-benchmark
+    image: ghcr.io/lucid-computing-labs/workshop-trellis-repro:benchmark-cu128-torch28
     runtime: nvidia
     gpus: all
     ipc: host
@@ -20,10 +20,9 @@ containers:
       - PORT: "8000"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     entrypoint:
-      - python
+      - sleep
     command:
-      - -m
-      - scripts.training_server
+      - infinity
 
 shim:
   upstream-port: 8000
