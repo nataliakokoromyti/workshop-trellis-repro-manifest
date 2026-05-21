@@ -4,9 +4,9 @@ memory: 1966080
 gpus: 8
 
 models:
-  - name: "primary-model"
-    repo: "moonshotai/Kimi-K2-Thinking@a51ccc050d73dab088bf7b0e2dd9b30ae85a4e55"
-    mpk: "95432fc61107d9bb7472a048c686505a54b0e3205a050e2fa781ddfe2330893e_594256601088_f19e7117-6b40-53fe-af43-f9a57cb0ec2f"
+  - name: "kimi-k2-6"
+    repo: "moonshotai/Kimi-K2.6@7eb5002f6aadc958aed6a9177b7ed26bb94011bb"
+    mpk: "baf763c7922bbafd337dc3aa86c9059f694169c51b1e0197d0d441aeea51186c_595205046272_7b0f3f16-bf8d-5206-8d14-088929943faf"
 
 containers:
   - name: workshop-yoda-benchmark
