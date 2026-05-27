@@ -24,10 +24,10 @@ containers:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     entrypoint:
       - python3
+      - -u
+      - -c
     command:
-      - -m
-      - http.server
-      - "8000"
+      - 'exec("import json,subprocess,os\nfrom http.server import BaseHTTPRequestHandler,ThreadingHTTPServer\njobs={}\nclass H(BaseHTTPRequestHandler):\n def s(self,c,x):\n  b=json.dumps(x).encode(); self.send_response(c); self.send_header(''content-type'',''application/json''); self.send_header(''content-length'',str(len(b))); self.end_headers(); self.wfile.write(b)\n def do_GET(self):\n  p=self.path.split(''?'',1)[0]\n  if p==''/health'': return self.s(200,{''ok'':1})\n  if p==''/gpus'':\n   o=subprocess.run(''nvidia-smi --query-gpu=index,name,memory.used,memory.total,utilization.gpu --format=csv,noheader,nounits'',shell=True,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT); return self.s(200,{''rc'':o.returncode,''out'':o.stdout})\n  i=p.rsplit(''/'',1)[-1]; pr=jobs.get(i)\n  if not pr: return self.s(404,{''error'':''no job''})\n  f=''/workspace/tinfoil-jobs/''+i+''.log''; t=open(f,errors=''replace'').read()[-60000:] if os.path.exists(f) else ''''\n  return self.s(200,{''id'':i,''running'':pr.poll() is None,''returncode'':pr.poll(),''tail'':t})\n def do_POST(self):\n  q=json.loads(self.rfile.read(int(self.headers.get(''content-length'',''0''))) or b''{}''); i=q.get(''id'',''job''); os.makedirs(''/workspace/tinfoil-jobs'',exist_ok=True); f=open(''/workspace/tinfoil-jobs/''+i+''.log'',''wb''); jobs[i]=subprocess.Popen(q[''cmd''],shell=True,cwd=q.get(''cwd'',''/workspace''),stdout=f,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL,start_new_session=True); self.s(202,{''id'':i,''running'':1})\n def log_message(self,*a): pass\nThreadingHTTPServer((''0.0.0.0'',8000),H).serve_forever()\n")'
 
 shim:
   upstream-port: 8000
