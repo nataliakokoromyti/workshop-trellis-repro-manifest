@@ -23,7 +23,7 @@ containers:
       - PORT: "8000"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     entrypoint:
-      - python3
+      - python
       - -u
       - -c
     command:
