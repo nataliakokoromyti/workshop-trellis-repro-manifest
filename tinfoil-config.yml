@@ -1,22 +1,39 @@
 cvm-version: 0.7.5
-cpus: 32
-memory: 524288
+cpus: 128
+memory: 1966080
 gpus: 8
 
+models:
+  - name: "kimi-k2-6"
+    repo: "moonshotai/Kimi-K2.6@7eb5002f6aadc958aed6a9177b7ed26bb94011bb"
+    mpk: "baf763c7922bbafd337dc3aa86c9059f694169c51b1e0197d0d441aeea51186c_595205046272_7b0f3f16-bf8d-5206-8d14-088929943faf"
+
 containers:
-  - name: api
-    image: ghcr.io/lucid-computing-labs/tinfoil-h200-cc:v0.1.1@sha256:7c2785543bf93b8a73b7516e378b38bfced0165763d0bc633e711c7a9e4b4221
+  - name: workshop-yoda-benchmark
+    image: ghcr.io/lucid-computing-labs/workshop-trellis-repro:benchmark-cu128-torch28@sha256:0ccad08bb77a468a6f60478efd797b464fa79fb32b7f70adccd4b30c11e9ef45
     runtime: nvidia
     gpus: all
     ipc: host
     env:
-      - PORT: "8080"
-      - EXPECTED_GPUS: "8"
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+      - PORT: "8000"
+      - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+    restart: on-failure
+    command:
+      - python3
+      - -u
+      - -c
+      - 'exec("import json,subprocess,os\nfrom http.server import BaseHTTPRequestHandler,ThreadingHTTPServer\njobs={}\nclass H(BaseHTTPRequestHandler):\n def s(self,c,x):\n  b=json.dumps(x).encode(); self.send_response(c); self.send_header(''content-type'',''application/json''); self.send_header(''content-length'',str(len(b))); self.end_headers(); self.wfile.write(b)\n def do_GET(self):\n  p=self.path.split(''?'',1)[0]\n  if p==''/health'': return self.s(200,{''ok'':1})\n  if p==''/gpus'':\n   o=subprocess.run(''nvidia-smi --query-gpu=index,name,memory.used,memory.total,utilization.gpu --format=csv,noheader,nounits'',shell=True,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT); return self.s(200,{''rc'':o.returncode,''out'':o.stdout})\n  i=p.rsplit(''/'',1)[-1]; pr=jobs.get(i)\n  if not pr: return self.s(404,{''error'':''no job''})\n  f=''/tmp/tinfoil-jobs/''+i+''.log''; t=open(f,errors=''replace'').read()[-60000:] if os.path.exists(f) else ''''\n  return self.s(200,{''id'':i,''running'':pr.poll() is None,''returncode'':pr.poll(),''tail'':t})\n def do_POST(self):\n  q=json.loads(self.rfile.read(int(self.headers.get(''content-length'',''0''))) or b''{}''); i=q.get(''id'',''job''); os.makedirs(''/tmp/tinfoil-jobs'',exist_ok=True); f=open(''/tmp/tinfoil-jobs/''+i+''.log'',''wb''); jobs[i]=subprocess.Popen(q[''cmd''],shell=True,cwd=q.get(''cwd'',''/workspace''),stdout=f,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL,start_new_session=True); self.s(202,{''id'':i,''running'':1})\n def log_message(self,*a): pass\nThreadingHTTPServer((''0.0.0.0'',8000),H).serve_forever()\n")'
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
 
 shim:
-  upstream-port: 8080
+  upstream-port: 8000
   paths:
     - /health
     - /gpus
-    - /
+    - /jobs
+    - /jobs/*
