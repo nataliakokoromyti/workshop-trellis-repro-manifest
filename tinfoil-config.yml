@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: workshop-yoda-benchmark
-    image: ghcr.io/lucid-computing-labs/workshop-trellis-repro:benchmark-cu128-torch28@sha256:0ccad08bb77a468a6f60478efd797b464fa79fb32b7f70adccd4b30c11e9ef45
+    image: ghcr.io/lucid-computing-labs/workshop-trellis-repro:benchmark-cu128-torch28-2666262d9555955c920a97f8ecbcd5dcee7ed7a8@sha256:46aafbbd15d53df3431aaa90a6c10c4cc1793c0e3e585e43ec6cb92b55011a20
     runtime: nvidia
     gpus: all
     ipc: host
