@@ -1,42 +1,22 @@
 cvm-version: 0.7.5
-cpus: 8
-memory: 16384
+cpus: 32
+memory: 524288
 gpus: 8
 
 containers:
   - name: api
-    image: python:3.12-slim@sha256:866411c135b507754efdf2fda51484be4d3d7d5173ed53cd083106132e710904
+    image: ghcr.io/lucid-computing-labs/tinfoil-h200-cc:v0.1.1@sha256:7c2785543bf93b8a73b7516e378b38bfced0165763d0bc633e711c7a9e4b4221
+    runtime: nvidia
+    gpus: all
+    ipc: host
     env:
       - PORT: "8080"
-    command:
-      - python
-      - -u
-      - -c
-      - |
-        import json
-        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-
-        class H(BaseHTTPRequestHandler):
-            def do_GET(self):
-                body = json.dumps({"ok": True, "path": self.path}).encode()
-                self.send_response(200)
-                self.send_header("content-type", "application/json")
-                self.send_header("content-length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-            def log_message(self, *args):
-                pass
-
-        ThreadingHTTPServer(("0.0.0.0", 8080), H).serve_forever()
-    healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()\""]
-      interval: 5s
-      timeout: 3s
-      retries: 12
-      start_period: 10s
+      - EXPECTED_GPUS: "8"
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
 
 shim:
   upstream-port: 8080
   paths:
     - /health
+    - /gpus
     - /
